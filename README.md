@@ -1,0 +1,1 @@
+# Limbaj de programare `.teo`
