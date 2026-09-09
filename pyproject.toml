@@ -1,0 +1,11 @@
+[project]
+name = "teo"
+version = "0.1.0"
+description = "TEO"
+requires-python = ">=3.14"
+
+[project.scripts]
+teo = "src.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
