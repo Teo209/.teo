@@ -1,7 +1,7 @@
 [project]
 name = "teo"
 version = "0.1.0"
-description = "TEO"
+description = "The Teo programming languace"
 requires-python = ">=3.14"
 
 [project.scripts]
