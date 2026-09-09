@@ -9,4 +9,4 @@ Early development.
 ## Running
 
 ```bash
-python src/main.py
+teo file_name.teo
