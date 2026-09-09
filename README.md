@@ -10,3 +10,12 @@ Early development.
 
 ```bash
 teo file_name.teo
+```
+
+## Setup
+```bash
+pip install -e .
+```
+
+## Help
+run  `teo -h` or `teo --help`
