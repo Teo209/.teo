@@ -5,6 +5,7 @@ import re
 class TokenTypes(Enum):
     NUMBER = auto()         # number
     IDENTIFIER = auto()     # variable name
+    EQUAL = auto()          # equality ==
     ASSIGN = auto()         # =
     PLUS = auto()           # +
     MINUS = auto()          # -
@@ -16,14 +17,16 @@ class TokenTypes(Enum):
 
 TOKEN_RULES = [
     (TokenTypes.NUMBER,      r"\d+"),
-    (TokenTypes.ASSIGN,      r"="),
     (TokenTypes.IDENTIFIER,  r"[a-zA-Z]\w*"),
+    (TokenTypes.MISMATCH,    r"={3,}"),         # don't confuse === or more with == =
+    (TokenTypes.EQUAL,       r"=="),
+    (TokenTypes.ASSIGN,      r"="),
     (TokenTypes.PLUS,        r"\+"),
     (TokenTypes.MINUS,       r"-"),
     (TokenTypes.SEMICOLON,   r";"),
     (TokenTypes.NEWLINE,     r"\n"),
     (TokenTypes.SKIP,        r"[ \t]+"),
-    (TokenTypes.MISMATCH,    r".")
+    (TokenTypes.MISMATCH,    r".")              # other mismatches
 ]
 
 
@@ -36,14 +39,24 @@ class Token():
     def __repr__(self) -> str:
         return f"Token (type: {self.type.name}; value: {repr(self.value)}; line: {self.line})\n"
 
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Token):
+            return NotImplemented
+
+        return (
+            self.type == other.type
+            and self.value == other.value
+            and self.line == other.line
+        )
+
 
 class Lexer():
     def __init__(self, source: str) -> None:
         self.source = source
 
     def tokenize(self) -> list[Token]:
-        # "(?P<nume>pattern)"
-        token_regex = "|".join(f"(?P<{rule[0].name}>{rule[1]})" for rule in TOKEN_RULES)
+        # "(?P<nume>regex)"
+        token_regex = "|".join(f"(?P<TOKEN_{i}>{rule[1]})" for i, rule in enumerate(TOKEN_RULES))
         
         #print(self.token_regex)
         
@@ -52,11 +65,12 @@ class Lexer():
         
         for match in re.finditer(token_regex, self.source):
             group_name = match.lastgroup
-            group_value = match.group(group_name) # type: ignore
+            group_value = match.group(group_name)
         
             # print("group:", group_name, "\nvalue:", group_value, "\n")
             
-            token_type = TokenTypes[group_name] # type: ignore
+            rule_index = int(group_name.removeprefix("TOKEN_"))
+            token_type = TOKEN_RULES[rule_index][0]
             
             if token_type == TokenTypes.SKIP: 
                 continue
