@@ -126,6 +126,9 @@ class Parser:
     def parse_primary(self) -> Expression:
         # Number, Identifier
         
+        if self.peek().type == TokenTypes.EOF:
+            raise SyntaxError(f"End of file, expected token at line {self.peek().line}")
+        
         token = self.consume()
         
         match token.type:
@@ -135,7 +138,7 @@ class Parser:
                 result = Variable(token.value)
             case _:
                 result = None
-                raise SyntaxError(f"\nInvalid token {token} at line {token.line}, number {self.current}\n")
+                raise SyntaxError(f"Invalid token {token} at line {token.line}")
             
         return result
         
@@ -163,7 +166,7 @@ class Parser:
         # return the next token
         
         if self.current + 1 >= len(self.token_list):
-            return Token(TokenTypes.EOF, "", 1)
+            return Token(TokenTypes.EOF, "", len(self.token_list))
         
         token = self.token_list[self.current + 1]
         
