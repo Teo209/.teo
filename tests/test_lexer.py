@@ -1,6 +1,7 @@
 from src.teo.lexer.lexer import Lexer, Token, TokenTypes
 import pytest
 
+
 def test_empty() -> None:
     source: str = ""
     
@@ -8,6 +9,20 @@ def test_empty() -> None:
     tokens: list[Token] = lexer.tokenize()
     
     expected: list = []
+    
+    assert tokens == expected
+
+
+def test_console_log() -> None:
+    source: str = "console_log 123"
+    
+    lexer: Lexer = Lexer(source)
+    tokens: list[Token] = lexer.tokenize()
+
+    expected: list = [
+        Token(TokenTypes.CONSOLE_LOG, "console_log", 1),
+        Token(TokenTypes.NUMBER, "123", 1)
+    ]
     
     assert tokens == expected
 
@@ -51,6 +66,36 @@ def test_identifier() -> None:
         Token(TokenTypes.IDENTIFIER, "abc", 1),
         Token(TokenTypes.IDENTIFIER, "test123", 1),
         Token(TokenTypes.IDENTIFIER, "var2a_", 1)
+    ]
+    
+    assert tokens == expected
+
+
+def test_multiply() -> None:
+    source: str = "* **"
+    
+    lexer: Lexer = Lexer(source)
+    tokens: list[Token] = lexer.tokenize()
+    
+    expected: list = [
+        Token(TokenTypes.MULTIPLY, "*", 1),
+        Token(TokenTypes.MULTIPLY, "*", 1),
+        Token(TokenTypes.MULTIPLY, "*", 1)
+    ]
+    
+    assert tokens == expected
+
+
+def test_divide() -> None:
+    source: str = "/ //"
+    
+    lexer: Lexer = Lexer(source)
+    tokens: list[Token] = lexer.tokenize()
+    
+    expected: list = [
+        Token(TokenTypes.DIVIDE, "/", 1),
+        Token(TokenTypes.DIVIDE, "/", 1),
+        Token(TokenTypes.DIVIDE, "/", 1)
     ]
     
     assert tokens == expected
@@ -154,3 +199,29 @@ def test_invalid_equal_assign2() -> None:
 
     with pytest.raises(SyntaxError):
         lexer.tokenize()
+
+
+def test_invalid_console_log1() -> None:
+    source: str = "console_log123"
+    
+    lexer: Lexer = Lexer(source)
+    tokens: list[Token] = lexer.tokenize()
+    
+    expected: list = [
+        Token(TokenTypes.IDENTIFIER, "console_log123", 1),
+    ]
+    
+    assert tokens == expected
+
+
+def test_invalid_console_log2() -> None:
+    source: str = "abconsole_log"
+    
+    lexer: Lexer = Lexer(source)
+    tokens: list[Token] = lexer.tokenize()
+    
+    expected: list = [
+        Token(TokenTypes.IDENTIFIER, "abconsole_log", 1),
+    ]
+    
+    assert tokens == expected
