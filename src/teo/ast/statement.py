@@ -19,7 +19,7 @@ class ExpressionStatement(Statement):
         return self.expression == other.expression
 
 
-class Assignment(Statement):
+class Assign(Statement):
     def __init__(self, name: str, value: Expression) -> None:
         self.name = name
         self.value = value
@@ -28,7 +28,7 @@ class Assignment(Statement):
         return f"Assignment ({self.name} = {self.value})"
     
     def __eq__(self, other) -> bool:
-        if not isinstance(other, Assignment):
+        if not isinstance(other, Assign):
             return NotImplemented
         
         return (

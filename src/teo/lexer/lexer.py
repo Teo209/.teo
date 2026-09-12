@@ -1,4 +1,5 @@
 from enum import Enum, auto
+from locale import currency
 import re
 
 
@@ -15,7 +16,8 @@ class TokenTypes(Enum):
     SEMICOLON = auto()      # end of instruction ;
     NEWLINE = auto()        # new line \n (enter)
     SKIP = auto()           # white space
-    MISMATCH = auto()       # other
+    MISMATCH = auto()       # othend of file, always last token
+    EOF = auto()            # ex
 
 
 TOKEN_RULES = [
@@ -81,7 +83,7 @@ class Lexer():
             if token_type == TokenTypes.SKIP: 
                 continue
             if token_type == TokenTypes.MISMATCH:
-                raise SyntaxError(f"Invalid character \'{group_value}\' at line {curent_line}")
+                raise SyntaxError(f"\nInvalid character \'{group_value}\' at line {curent_line}\n")
             else:
                 new_token = Token(token_type, group_value, curent_line)
                 token_list.append(new_token)
