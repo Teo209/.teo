@@ -45,9 +45,15 @@ def test_primary_expressions():
     ast = parser.parse()
     
     expected: list = [
-        ExpressionStatement(Literal(5)),
-        ExpressionStatement(Literal(42)),
-        ExpressionStatement(Variable("a"))
+        ExpressionStatement(
+            Literal(5)
+            ),
+        ExpressionStatement(
+            Literal(42)
+            ),
+        ExpressionStatement(
+            Variable("a")
+            )
     ]
     
     assert ast == expected
@@ -99,7 +105,7 @@ def test_unary_operations():
     assert ast == expected
 
 
-def test_multiplication():
+def test_multiplication1():
     source: str = "2 * 3"
     
     lexer = Lexer(source)
@@ -114,6 +120,32 @@ def test_multiplication():
                 Literal(2),
                 "*",
                 Literal(3)
+            )
+        )
+    ]
+    
+    assert ast == expected
+
+
+def test_multiplication2():
+    source: str = "2 * 3 * 4"
+    
+    lexer = Lexer(source)
+    tokens = lexer.tokenize()
+    
+    parser = Parser(tokens)
+    ast = parser.parse()
+    
+    expected: list = [
+        ExpressionStatement(
+            BinaryOperation(
+                BinaryOperation(
+                    Literal(2),
+                    "*",
+                    Literal(3)
+                ),
+                "*",
+                Literal(4)
             )
         )
     ]
@@ -141,33 +173,7 @@ def test_division():
     ]
     
     assert ast == expected
-
-
-def test_multiplication_left_associativity():
-    source: str = "2 * 3 * 4"
     
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                BinaryOperation(
-                    Literal(2),
-                    "*",
-                    Literal(3)
-                ),
-                "*",
-                Literal(4)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
 
 def test_addition():
     source: str = "2 + 3"
@@ -191,7 +197,7 @@ def test_addition():
     assert ast == expected
 
 
-def test_subtraction():
+def test_subtraction1():
     source: str = "10 - 4"
     
     lexer = Lexer(source)
@@ -213,7 +219,7 @@ def test_subtraction():
     assert ast == expected
 
 
-def test_addition_left_associativity():
+def test_subtraction2():
     source: str = "10 - 3 - 2"
     
     lexer = Lexer(source)
@@ -239,7 +245,7 @@ def test_addition_left_associativity():
     assert ast == expected
 
 
-def test_operator_precedence():
+def test_operator_order():
     source: str = "2 + 3 * 4"
     
     lexer = Lexer(source)
@@ -265,7 +271,7 @@ def test_operator_precedence():
     assert ast == expected
 
 
-def test_operator_precedence_reverse():
+def test_operator_order_reverse():
     source: str = "2 * 3 + 4"
     
     lexer = Lexer(source)
@@ -291,7 +297,7 @@ def test_operator_precedence_reverse():
     assert ast == expected
 
 
-def test_unary_precedence():
+def test_unary_order():
     source: str = "-5 * 2"
     
     lexer = Lexer(source)
@@ -393,7 +399,10 @@ def test_assignment_unary():
     expected: list = [
         Assign(
             "a",
-            UnaryOperation("-", Literal(5))
+            UnaryOperation(
+                "-",
+                Literal(5)
+            )
         )
     ]
     
@@ -410,7 +419,9 @@ def test_console_log_literal():
     ast = parser.parse()
     
     expected: list = [
-        ConsoleLog(Literal(5))
+        ConsoleLog(
+            Literal(5)
+        )
     ]
     
     assert ast == expected
@@ -426,7 +437,9 @@ def test_console_log_variable():
     ast = parser.parse()
     
     expected: list = [
-        ConsoleLog(Variable("a"))
+        ConsoleLog(
+            Variable("a")
+        )
     ]
     
     assert ast == expected
@@ -468,15 +481,23 @@ def test_multiple_statements():
     ast = parser.parse()
     
     expected: list = [
-        Assign("a", Literal(5)),
-        Assign("b", Literal(10)),
-        ConsoleLog(Variable("a"))
+        Assign(
+            "a",
+            Literal(5)
+        ),
+        Assign(
+            "b",
+            Literal(10)
+        ),
+        ConsoleLog(
+            Variable("a")
+        )
     ]
     
     assert ast == expected
 
 
-def test_semicolon_separator():
+def test_semicolon():
     source: str = "a = 5; b = 10; console_log a"
     
     lexer = Lexer(source)
@@ -486,9 +507,17 @@ def test_semicolon_separator():
     ast = parser.parse()
     
     expected: list = [
-        Assign("a", Literal(5)),
-        Assign("b", Literal(10)),
-        ConsoleLog(Variable("a"))
+        Assign(
+            "a", 
+            Literal(5)
+        ),
+        Assign(
+            "b",
+            Literal(10)
+        ),
+        ConsoleLog(
+            Variable("a")
+        )
     ]
     
     assert ast == expected
@@ -508,8 +537,14 @@ def test_consecutive_separators():
     ast = parser.parse()
     
     expected: list = [
-        Assign("a", Literal(5)),
-        Assign("b", Literal(10))
+        Assign(
+            "a",
+            Literal(5)
+        ),
+        Assign(
+            "b",
+            Literal(10)
+        )
     ]
     
     assert ast == expected
