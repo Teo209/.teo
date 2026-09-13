@@ -44,3 +44,6 @@ class Environment:
             return self.enclosing.get(name)
         
         raise NameError(f"Variable {name} not found")
+    
+    def __repr__(self):
+        return f"Environment (enclosing: {str(self.enclosing)}, \nvalues = {self.values})"
