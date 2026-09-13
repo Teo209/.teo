@@ -90,11 +90,3 @@ class Lexer():
                 if token_type == TokenTypes.NEWLINE: curent_line += 1
             
         return token_list
-
-
-if __name__ == "__main__":    
-    # token = Token(type=TokenTypes.NUMBER, value="234", line=12)
-    lexer = Lexer("var = 23; \naaa = 3 + var")
-    tokens = lexer.tokenize()
-    # print('\n', token)
-    print('\n', tokens)

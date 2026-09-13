@@ -2,6 +2,9 @@ import argparse
 import sys
 from importlib.metadata import metadata
 
+from teo.lexer.lexer import Lexer
+from teo.parser.parser import Parser
+
 
 def get_metadata():
     data = metadata("teo")
@@ -51,7 +54,14 @@ def main():
         print(f"Error reading file '{args.file}': {e}.")
         return 1
 
-    print(source)
+    #------------------------------------------------#
+    lexer = Lexer(source)
+    token_list = lexer.tokenize()
+    parser = Parser(token_list)
+    ast = parser.parse()
+    
+    print(ast)
+    #------------------------------------------------#
     
     return 0
 
