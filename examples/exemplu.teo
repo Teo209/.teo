@@ -1,11 +1,9 @@
-a = 5; b = 10;d=2
-
+a = 5
+b = 10
 console_log a
 console_log b
-
 console_log a + b
-console_log a * 2
-console_log -a
-
-c = a + b * 2
+var c = a * b
+console_log c
+c = c + 2
 console_log c

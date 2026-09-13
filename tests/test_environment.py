@@ -69,16 +69,33 @@ def test_assign_existing_global():
 def test_assign_inexistent_local():
     global_env = Environment()
     
-    with pytest.raises(NameError):
-        global_env.assign("a", 123)
+    ret = global_env.assign("a", 123)
+    
+    expected = {
+        "a": 123
+    }
+    
+    assert (
+        ret == False and
+        global_env.values == expected
+    )
     
 
 def test_assign_inexistent_global():
     global_env = Environment()
     function_env = Environment(global_env)
     
-    with pytest.raises(NameError):
-        function_env.assign("a", 123)
+    ret = function_env.assign("a", 123)
+    
+    expected = {
+        "a": 123
+    }
+    
+    assert (
+        ret == False and
+        function_env.values == expected and
+        global_env.values == {}
+    )
 
 
 def test_assign_recursion():

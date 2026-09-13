@@ -22,14 +22,13 @@ class Environment:
     def assign(self, name: str, value: object) -> bool:
         # Give a value to a variable
         # Return True if variable is found and value can be assigned else define it and return False
-        
-        if name in self.values:
-            self.values[name] = value
+
+        environment = self.find(name)
+
+        if environment:
+            environment.values[name] = value
             return True
-        
-        if self.enclosing:
-            return self.enclosing.assign(name, value)
-        
+
         self.define(name, value)
         return False
     
@@ -38,13 +37,22 @@ class Environment:
         # Return variable value
         # Return variable value if it is found else raises error
         
+        environment = self.find(name)
+        
+        if not environment:
+            raise NameError(f"Variable {name} not found")
+        
+        return environment.values[name]
+    
+
+    def find(self, name: str):
         if name in self.values:
-            return self.values[name]
-        
+            return self
+
         if self.enclosing:
-            return self.enclosing.get(name)
-        
-        raise NameError(f"Variable {name} not found")
+            return self.enclosing.find(name)
+
+        return None
     
     def __repr__(self):
         return f"Environment (enclosing: {str(self.enclosing)}, \nvalues = {self.values})"

@@ -21,7 +21,7 @@ class Expression:
 
 # literal
 class Literal(Expression):
-    def __init__(self, value) -> None:
+    def __init__(self, value):
         self.value = value
     
     def __repr__(self) -> str:
@@ -34,12 +34,12 @@ class Literal(Expression):
         return self.value == other.value
     
     def accept(self, visitor: ExpressionVisitor):
-        visitor.visit_literal(self)
+        return visitor.visit_literal(self)
 
 
 # access variables
 class Variable(Expression):
-    def __init__(self, name) -> None:
+    def __init__(self, name):
         self.name = name
     
     def __repr__(self) -> str:
@@ -52,12 +52,12 @@ class Variable(Expression):
         return self.name == other.name
     
     def accept(self, visitor: ExpressionVisitor):
-        visitor.visit_variable(self)
+        return visitor.visit_variable(self)
 
 
 # binary
 class BinaryOperation(Expression):
-    def __init__(self, left: Expression, operator, right: Expression) -> None:
+    def __init__(self, left: Expression, operator, right: Expression):
         self.left = left
         self.operator = operator
         self.right = right
@@ -75,12 +75,12 @@ class BinaryOperation(Expression):
                 self.right == other.right)
     
     def accept(self, visitor: ExpressionVisitor):
-        visitor.visit_binary_operation(self)
+        return visitor.visit_binary_operation(self)
 
 
 # unary
 class UnaryOperation(Expression):
-    def __init__(self, operator, right: Expression) -> None:
+    def __init__(self, operator, right: Expression):
         self.operator = operator
         self.right = right
     
@@ -96,4 +96,4 @@ class UnaryOperation(Expression):
             self.right == other.right)
 
     def accept(self, visitor: ExpressionVisitor):
-        visitor.visit_unary_operation(self)
+        return visitor.visit_unary_operation(self)

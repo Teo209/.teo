@@ -34,7 +34,7 @@ class ExpressionStatement(Statement):
         return self.expression == other.expression
     
     def accept(self, visitor: StatementVisitor):
-        visitor.visit_expression_statement(self)
+        return visitor.visit_expression_statement(self)
 
 
 # assign value to variable
@@ -57,7 +57,7 @@ class Assign(Statement):
         )
     
     def accept(self, visitor: StatementVisitor):
-        visitor.visit_assign(self)
+        return visitor.visit_assign(self)
 
 
 # log something in console
@@ -75,4 +75,4 @@ class ConsoleLog(Statement):
         return self.output == other.output
     
     def accept(self, visitor: StatementVisitor):
-        visitor.visit_console_log(self)
+        return visitor.visit_console_log(self)

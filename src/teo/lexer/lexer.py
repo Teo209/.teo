@@ -24,7 +24,7 @@ class TokenTypes(Enum):
 TOKEN_RULES = [
     (TokenTypes.CONSOLE_LOG, r"console_log\b"),
     (TokenTypes.NUMBER,      r"\d+"),
-    (TokenTypes.VAR,         r"^var$"),
+    (TokenTypes.VAR,         r"var\b"),
     (TokenTypes.IDENTIFIER,  r"[a-zA-Z]\w*"),
     (TokenTypes.MISMATCH,    r"={3,}"),         # don't confuse === or more with == =
     (TokenTypes.EQUAL,       r"=="),
