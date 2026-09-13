@@ -1,9 +1,12 @@
 a = 5
 b = 10
+
 console_log a
 console_log b
 console_log a + b
+
 var c = a * b
 console_log c
+
 c = c + 2
 console_log c
