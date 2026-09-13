@@ -1,5 +1,22 @@
+# visitor class
+class ExpressionVisitor:
+    def visit_literal(self, literal: "Literal"):
+        ...
+    
+    def visit_variable(self, variable: "Variable"):
+        ...
+    
+    def visit_binary_operation(self, binary_operation: "BinaryOperation"):
+        ...
+    
+    def visit_unary_operation(self, unary_operation: "UnaryOperation"):
+        ...
+
+
+# base class for expressions
 class Expression:
-    pass
+    def accept(self, visitor: ExpressionVisitor):
+        pass
 
 
 # literal
@@ -15,6 +32,9 @@ class Literal(Expression):
             return NotImplemented
         
         return self.value == other.value
+    
+    def accept(self, visitor: ExpressionVisitor):
+        visitor.visit_literal(self)
 
 
 # access variables
@@ -30,6 +50,9 @@ class Variable(Expression):
             return NotImplemented
         
         return self.name == other.name
+    
+    def accept(self, visitor: ExpressionVisitor):
+        visitor.visit_variable(self)
 
 
 # binary
@@ -50,6 +73,9 @@ class BinaryOperation(Expression):
                 self.left == other.left and
                 self.operator == other.operator and
                 self.right == other.right)
+    
+    def accept(self, visitor: ExpressionVisitor):
+        visitor.visit_binary_operation(self)
 
 
 # unary
@@ -68,3 +94,6 @@ class UnaryOperation(Expression):
         return (
             self.operator == other.operator and
             self.right == other.right)
+
+    def accept(self, visitor: ExpressionVisitor):
+        visitor.visit_unary_operation(self)

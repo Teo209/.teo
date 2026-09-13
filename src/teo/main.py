@@ -4,6 +4,7 @@ from importlib.metadata import metadata
 
 from teo.lexer.lexer import Lexer
 from teo.parser.parser import Parser
+from teo.interpreter.interpreter import Interpreter
 
 
 def get_metadata():
@@ -37,7 +38,7 @@ def main():
                             help=".teo source file to execute"
                             )
     
-    args = arg_parser.parse_args();
+    args = arg_parser.  rgs();
     
     if args.file is None:
         arg_parser.print_help()
@@ -54,14 +55,16 @@ def main():
         print(f"Error reading file '{args.file}': {e}.")
         return 1
 
-    #------------------------------------------------#
+    # =============================================== #
     lexer = Lexer(source)
     token_list = lexer.tokenize()
+    
     parser = Parser(token_list)
     ast = parser.parse()
     
-    print(ast)
-    #------------------------------------------------#
+    interpreter = Interpreter()
+    interpreter.interpret(ast)
+    # =============================================== #
     
     return 0
 

@@ -40,32 +40,51 @@ class Parser:
 
     
     def parse_statement(self) -> Statement:
-        # console_log a; a = 5
+        # console_log a; a = 5; var a = 5
         
         next = self.peek()
         
         match next.type:
+            case TokenTypes.VAR:
+                self.consume()                                          # var
+                next = self.peek()                                      # identifier
+                
+                if next.type != TokenTypes.IDENTIFIER:
+                    raise SyntaxError(f"Expected identifier after 'var' at line {next.line}")
+                
+                token = self.consume()                                  # identifier
+                next = self.peek()                                      # assign
+                
+                if next.type != TokenTypes.ASSIGN:
+                    raise SyntaxError(f"Expected '=' after var {token} at line {next.line}")
+                
+                self.consume()                                          # assign
+                    
+                expr = self.parse_expression()                          # value
+
+                return Assign(token.value, expr, is_local=True)
+            
             case TokenTypes.CONSOLE_LOG:
-                token = self.consume()
-                expr = self.parse_expression()
+                token = self.consume()                                  # console_log
+                expr = self.parse_expression()                          # value
                 
                 return ConsoleLog(expr)
             
             case TokenTypes.IDENTIFIER:
-                next = self.peek_next()
+                next = self.peek_next()                                 # assign
                 
                 if next.type != TokenTypes.ASSIGN:
-                    return ExpressionStatement(self.parse_expression())
+                    return ExpressionStatement(self.parse_expression()) # value
                 
-                token = self.consume()
-                self.consume()
+                token = self.consume()                                  # identifier
+                self.consume()                                          # assign
                     
-                expr = self.parse_expression()
+                expr = self.parse_expression()                          # value
 
                 return Assign(token.value, expr)
             
             case _:
-                return ExpressionStatement(self.parse_expression())
+                return ExpressionStatement(self.parse_expression())     # value
         
     
     def parse_expression(self) -> Expression:
@@ -74,6 +93,7 @@ class Parser:
         result = self.parse_addition()
 
         return result
+
     
     def parse_addition(self) -> Expression:
         # + -

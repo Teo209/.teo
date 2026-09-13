@@ -6,6 +6,7 @@ import re
 class TokenTypes(Enum):
     CONSOLE_LOG = auto()    # console_log
     NUMBER = auto()         # number
+    VAR = auto()            # define local variable
     IDENTIFIER = auto()     # variable name
     EQUAL = auto()          # equality ==
     ASSIGN = auto()         # =
@@ -23,6 +24,7 @@ class TokenTypes(Enum):
 TOKEN_RULES = [
     (TokenTypes.CONSOLE_LOG, r"console_log\b"),
     (TokenTypes.NUMBER,      r"\d+"),
+    (TokenTypes.VAR,         r"^var$"),
     (TokenTypes.IDENTIFIER,  r"[a-zA-Z]\w*"),
     (TokenTypes.MISMATCH,    r"={3,}"),         # don't confuse === or more with == =
     (TokenTypes.EQUAL,       r"=="),

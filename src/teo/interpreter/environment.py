@@ -21,7 +21,7 @@ class Environment:
     
     def assign(self, name: str, value: object) -> bool:
         # Give a value to a variable
-        # Return True if variable is found and value can be assigned else False
+        # Return True if variable is found and value can be assigned else define it and return False
         
         if name in self.values:
             self.values[name] = value
@@ -30,7 +30,8 @@ class Environment:
         if self.enclosing:
             return self.enclosing.assign(name, value)
         
-        raise NameError(f"Variable {name} not found")
+        self.define(name, value)
+        return False
     
     
     def get(self, name: str) -> object:
