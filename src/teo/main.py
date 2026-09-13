@@ -38,7 +38,7 @@ def main():
                             help=".teo source file to execute"
                             )
     
-    args = arg_parser.  rgs();
+    args = arg_parser.parse_args();
     
     if args.file is None:
         arg_parser.print_help()
