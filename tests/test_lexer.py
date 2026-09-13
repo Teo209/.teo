@@ -1,4 +1,4 @@
-from src.teo.lexer.lexer import Lexer, Token, TokenTypes
+from teo.lexer.lexer import Lexer, Token, TokenTypes
 import pytest
 
 

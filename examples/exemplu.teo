@@ -1,0 +1,11 @@
+a = 5; b = 10;d=2
+
+console_log a
+console_log b
+
+console_log a + b
+console_log a * 2
+console_log -a
+
+c = a + b * 2
+console_log c
