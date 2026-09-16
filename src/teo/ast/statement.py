@@ -53,7 +53,8 @@ class Assign(Statement):
         
         return (
             self.name == other.name and
-            self.value == other.value
+            self.value == other.value and
+            self.is_local == other.is_local
         )
     
     def accept(self, visitor: StatementVisitor):

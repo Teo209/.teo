@@ -1,5 +1,4 @@
 from enum import Enum, auto
-from locale import currency
 import re
 
 
@@ -17,8 +16,8 @@ class TokenTypes(Enum):
     SEMICOLON = auto()      # end of instruction ;
     NEWLINE = auto()        # new line \n (enter)
     SKIP = auto()           # white space
-    MISMATCH = auto()       # othend of file, always last token
-    EOF = auto()            # ex
+    MISMATCH = auto()       # other characters
+    EOF = auto()            # end of file, always last token
 
 
 TOKEN_RULES = [
