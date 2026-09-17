@@ -45,8 +45,10 @@ class Token():
         self.value = value
         self.line = line
         
+    
     def __repr__(self) -> str:
         return f"Token (type: {self.type.name}; value: {repr(self.value)}; line: {self.line})\n"
+
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, Token):
@@ -62,6 +64,7 @@ class Token():
 class Lexer():
     def __init__(self, source: str) -> None:
         self.source = source
+    
 
     def tokenize(self) -> list[Token]:
         # "(?P<nume>regex)"
@@ -89,5 +92,7 @@ class Lexer():
                 new_token = Token(token_type, group_value, curent_line)
                 token_list.append(new_token)
                 if token_type == TokenTypes.NEWLINE: curent_line += 1
+        
+        token_list.append(Token(TokenTypes.EOF, value="", line=curent_line+1))
             
         return token_list

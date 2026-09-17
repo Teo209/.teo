@@ -7,6 +7,7 @@ def test_empty() -> None:
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
     
     expected: list = []
     
@@ -18,6 +19,7 @@ def test_console_log() -> None:
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
 
     expected: list = [
         Token(TokenTypes.CONSOLE_LOG, "console_log", 1),
@@ -32,11 +34,12 @@ def test_numbers() -> None:
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
 
     expected: list = [
         Token(TokenTypes.NUMBER, "123", 1),
         Token(TokenTypes.NUMBER, "907", 1),
-        Token(TokenTypes.NUMBER, "921", 1),
+        Token(TokenTypes.NUMBER, "921", 1)
     ]
     
     assert tokens == expected
@@ -47,10 +50,11 @@ def test_equal_assign() -> None:
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
     
     expected: list = [
         Token(TokenTypes.ASSIGN, "=", 1),
-        Token(TokenTypes.EQUAL, "==", 1),
+        Token(TokenTypes.EQUAL, "==", 1)
     ]
     
     assert tokens == expected
@@ -61,6 +65,7 @@ def test_identifier() -> None:
 
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
     
     expected: list = [
         Token(TokenTypes.IDENTIFIER, "abc", 1),
@@ -76,6 +81,7 @@ def test_multiply() -> None:
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
     
     expected: list = [
         Token(TokenTypes.MULTIPLY, "*", 1),
@@ -91,6 +97,7 @@ def test_divide() -> None:
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
     
     expected: list = [
         Token(TokenTypes.DIVIDE, "/", 1),
@@ -106,6 +113,7 @@ def test_plus() -> None:
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
     
     expected: list = [
         Token(TokenTypes.PLUS, "+", 1),
@@ -121,6 +129,7 @@ def test_minus() -> None:
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
     
     expected: list = [
         Token(TokenTypes.MINUS, "-", 1),
@@ -136,6 +145,7 @@ def test_semicolon() -> None:
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
     
     expected: list = [
         Token(TokenTypes.SEMICOLON, ";", 1),
@@ -153,6 +163,7 @@ def test_newline() -> None:
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
     
     expected: list = [
         Token(TokenTypes.NEWLINE, "\n", 1),
@@ -168,8 +179,10 @@ def test_skip() -> None:
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
     
-    expected: list = []
+    expected: list = [
+    ]
     
     assert tokens == expected
 
@@ -206,9 +219,10 @@ def test_invalid_console_log1() -> None:
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.IDENTIFIER, "console_log123", 1),
+        Token(TokenTypes.IDENTIFIER, "console_log123", 1)
     ]
     
     assert tokens == expected
@@ -219,9 +233,10 @@ def test_invalid_console_log2() -> None:
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.IDENTIFIER, "abconsole_log", 1),
+        Token(TokenTypes.IDENTIFIER, "abconsole_log", 1)
     ]
     
     assert tokens == expected

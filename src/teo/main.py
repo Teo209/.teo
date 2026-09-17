@@ -7,7 +7,7 @@ from teo.parser.parser import Parser
 from teo.interpreter.interpreter import Interpreter
 
 
-def get_metadata():
+def get_metadata() -> dict[str: str]:
     data = metadata("teo")
 
     NAME = data["name"]
@@ -17,7 +17,18 @@ def get_metadata():
     return {"prog": NAME, "version": VERSION, "description": SUMMARY}
 
 
-def main():
+def run(source: str) -> None:
+    lexer = Lexer(source)
+    token_list = lexer.tokenize()
+    
+    parser = Parser(token_list)
+    ast = parser.parse()
+    
+    interpreter = Interpreter()
+    interpreter.interpret(ast)
+
+
+def read() -> str:
     arg_parser = argparse.ArgumentParser(
         prog=get_metadata()["prog"],
         description=get_metadata()["description"],
@@ -42,7 +53,7 @@ def main():
     
     if args.file is None:
         arg_parser.print_help()
-        return 0
+        return
 
 
     try:
@@ -50,20 +61,22 @@ def main():
             source = file.read()
     except FileNotFoundError:
         print(f"Error: File '{args.file}' not found. Please provide a valid file path.")
-        return 1
+        return
     except Exception as e:
         print(f"Error reading file '{args.file}': {e}.")
-        return 1
+        return
+    
+    return source
+
+
+def main():
+    # =============================================== #
+    source = read()
+    # =============================================== #
+    
 
     # =============================================== #
-    lexer = Lexer(source)
-    token_list = lexer.tokenize()
-    
-    parser = Parser(token_list)
-    ast = parser.parse()
-    
-    interpreter = Interpreter()
-    interpreter.interpret(ast)
+    run(source)
     # =============================================== #
     
     return 0

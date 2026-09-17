@@ -37,6 +37,10 @@ class Parser:
 
             statement = self.parse_statement()
             result.append(statement)
+            
+            next_token = self.peek()
+            if not next_token.type in [TokenTypes.NEWLINE, TokenTypes.SEMICOLON, TokenTypes.EOF]:
+                raise SyntaxError (f"Missing \';\' after statement at line {next_token.line}")
 
     
     def parse_statement(self) -> Statement:
@@ -174,9 +178,6 @@ class Parser:
     def peek(self) -> Token:
         # return current token
         
-        if self.current >= len(self.token_list):
-            return Token(TokenTypes.EOF, "", 1)
-        
         token = self.token_list[self.current]
         
         return token
@@ -184,9 +185,6 @@ class Parser:
     
     def peek_next(self) -> Token:
         # return the next token
-        
-        if self.current + 1 >= len(self.token_list):
-            return Token(TokenTypes.EOF, "", len(self.token_list))
         
         token = self.token_list[self.current + 1]
         
