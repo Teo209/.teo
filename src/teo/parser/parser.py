@@ -153,13 +153,23 @@ class Parser:
         if self.peek().type == TokenTypes.EOF:
             raise SyntaxError(f"End of file, expected token at line {self.peek().line}")
         
+        
         token = self.consume()
         
         match token.type:
             case TokenTypes.NUMBER:
                 result = Literal(int(token.value))
+                
             case TokenTypes.IDENTIFIER:
                 result = Variable(token.value)
+                
+            case TokenTypes.L_PARENS:
+                result = self.parse_expression()    
+                
+                token = self.consume()
+                if token.type != TokenTypes.R_PARENS:
+                    raise SyntaxError(f"Expected \')\' at line {token.line}")
+            
             case _:
                 result = None
                 raise SyntaxError(f"Invalid token {token} at line {token.line}")

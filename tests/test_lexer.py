@@ -12,6 +12,15 @@ def test_empty() -> None:
     expected: list = []
     
     assert tokens == expected
+    
+
+def test_eof() -> None:
+    source = "123"
+
+    lexer = Lexer(source)
+    tokens = lexer.tokenize()
+
+    assert tokens[-1] == Token(TokenTypes.EOF, "", 2)
 
 
 def test_console_log() -> None:
@@ -237,6 +246,24 @@ def test_invalid_console_log2() -> None:
     
     expected: list = [
         Token(TokenTypes.IDENTIFIER, "abconsole_log", 1)
+    ]
+    
+    assert tokens == expected
+
+
+def test_parens() -> None:
+    source: str = "a(b)s"
+    
+    lexer: Lexer = Lexer(source)
+    tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
+    
+    expected: list = [
+        Token(TokenTypes.IDENTIFIER, "a", 1),
+        Token(TokenTypes.L_PARENS, "(", 1),
+        Token(TokenTypes.IDENTIFIER, "b", 1),
+        Token(TokenTypes.R_PARENS, ")", 1),
+        Token(TokenTypes.IDENTIFIER, "s", 1)
     ]
     
     assert tokens == expected
