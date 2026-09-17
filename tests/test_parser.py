@@ -724,1454 +724,156 @@ def test_invalid_parens_3():
         parser.parse()
 
 
-from teo.parser.parser import Parser
-from teo.lexer.lexer import Lexer
-from teo.ast.expression import (
-    Expression,
-    Literal,
-    Variable,
-    BinaryOperation,
-    UnaryOperation
-)
-from teo.ast.statement import (
-    Statement,
-    ExpressionStatement,
-    Assign,
-    ConsoleLog
-)
-import pytest
-
-
-def test_empty():
-    source: str = ""
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-    ]
-    
-    assert ast == expected
-
-
-def test_primary_expressions():
+def test_float_literals():
     source: str = """
-    5
-    42
-    a
+    0.5
+    5.4
+    42.123
     """
-    
+
     lexer = Lexer(source)
     tokens = lexer.tokenize()
-    
+
     parser = Parser(tokens)
     ast = parser.parse()
-    
+
     expected: list = [
-        ExpressionStatement(
-            Literal(5)
-            ),
-        ExpressionStatement(
-            Literal(42)
-            ),
-        ExpressionStatement(
-            Variable("a")
-            )
+        ExpressionStatement(Literal(0.5)),
+        ExpressionStatement(Literal(5.4)),
+        ExpressionStatement(Literal(42.123))
     ]
-    
+
     assert ast == expected
 
 
-def test_unary_operations():
-    source: str = """
-    -5
-    +5
-    --5
-    -+5
-    """
-    
+def test_float_assignment():
+    source: str = "a = 5.5"
+
     lexer = Lexer(source)
     tokens = lexer.tokenize()
-    
+
     parser = Parser(tokens)
     ast = parser.parse()
-    
+
     expected: list = [
-        ExpressionStatement(
-            UnaryOperation(
-                "-", 
-                Literal(5)
-                )
-            ),
-        ExpressionStatement(
-            UnaryOperation(
-                "+", 
-                Literal(5)
-                )
-            ),
-        ExpressionStatement(
-            UnaryOperation("-",
-             UnaryOperation("-", 
-             Literal(5)
-                )
-            )
-        ),
-        ExpressionStatement(
-            UnaryOperation("-",
-             UnaryOperation("+", 
-             Literal(5)
-                )
-            )
-        )
+        Assign("a", Literal(5.5))
     ]
-    
+
     assert ast == expected
 
 
-def test_multiplication1():
-    source: str = "2 * 3"
-    
+def test_float_expression():
+    source: str = "2.5 + 3.5"
+
     lexer = Lexer(source)
     tokens = lexer.tokenize()
-    
+
     parser = Parser(tokens)
     ast = parser.parse()
-    
+
     expected: list = [
         ExpressionStatement(
             BinaryOperation(
-                Literal(2),
+                Literal(2.5),
+                "+",
+                Literal(3.5)
+            )
+        )
+    ]
+
+    assert ast == expected
+
+
+def test_bool1():
+    source: str = "true; false"
+
+    lexer = Lexer(source)
+    tokens = lexer.tokenize()
+
+    parser = Parser(tokens)
+    ast = parser.parse()
+
+    expected: list = [
+        ExpressionStatement(Literal(True)),
+        ExpressionStatement(Literal(False))
+    ]
+
+    assert ast == expected
+
+
+def test_bool2():
+    source: str = "console_log true; console_log false"
+
+    lexer = Lexer(source)
+    tokens = lexer.tokenize()
+
+    parser = Parser(tokens)
+    ast = parser.parse()
+
+    expected: list = [
+        ConsoleLog(Literal(True)),
+        ConsoleLog(Literal(False))
+    ]
+
+    assert ast == expected
+
+
+def test_bool3():
+    source: str = "a = true; b = false"
+
+    lexer = Lexer(source)
+    tokens = lexer.tokenize()
+
+    parser = Parser(tokens)
+    ast = parser.parse()
+
+    expected: list = [
+        Assign("a", Literal(True)),
+        Assign("b", Literal(False))
+    ]
+
+    assert ast == expected
+
+
+def test_float_multiplication():
+    source: str = "2.5 * 2"
+
+    lexer = Lexer(source)
+    tokens = lexer.tokenize()
+
+    parser = Parser(tokens)
+    ast = parser.parse()
+
+    expected: list = [
+        ExpressionStatement(
+            BinaryOperation(
+                Literal(2.5),
                 "*",
-                Literal(3)
+                Literal(2)
             )
         )
     ]
-    
+
     assert ast == expected
 
 
-def test_multiplication2():
-    source: str = "2 * 3 * 4"
-    
+def test_float_division():
+    source: str = "5.5 / 2"
+
     lexer = Lexer(source)
     tokens = lexer.tokenize()
-    
+
     parser = Parser(tokens)
     ast = parser.parse()
-    
+
     expected: list = [
         ExpressionStatement(
             BinaryOperation(
-                BinaryOperation(
-                    Literal(2),
-                    "*",
-                    Literal(3)
-                ),
-                "*",
-                Literal(4)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_division():
-    source: str = "10 / 2"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                Literal(10),
+                Literal(5.5),
                 "/",
                 Literal(2)
             )
         )
     ]
-    
+
     assert ast == expected
-    
-
-def test_addition():
-    source: str = "2 + 3"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                Literal(2),
-                "+",
-                Literal(3)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_subtraction1():
-    source: str = "10 - 4"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                Literal(10),
-                "-",
-                Literal(4)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_subtraction2():
-    source: str = "10 - 3 - 2"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                BinaryOperation(
-                    Literal(10),
-                    "-",
-                    Literal(3)
-                ),
-                "-",
-                Literal(2)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_operator_order():
-    source: str = "2 + 3 * 4"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                Literal(2),
-                "+",
-                BinaryOperation(
-                    Literal(3),
-                    "*",
-                    Literal(4)
-                )
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_operator_order_reverse():
-    source: str = "2 * 3 + 4"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                BinaryOperation(
-                    Literal(2),
-                    "*",
-                    Literal(3)
-                ),
-                "+",
-                Literal(4)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_unary_order():
-    source: str = "-5 * 2"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                UnaryOperation("-", Literal(5)),
-                "*",
-                Literal(2)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_expression_statement():
-    source: str = "a + 2"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                Variable("a"),
-                "+",
-                Literal(2)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_assignment():
-    source: str = "a = 5"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        Assign(
-            "a",
-            Literal(5)
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_assignment_expression():
-    source: str = "a = 2 + 3 * 4"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        Assign(
-            "a",
-            BinaryOperation(
-                Literal(2),
-                "+",
-                BinaryOperation(
-                    Literal(3),
-                    "*",
-                    Literal(4)
-                )
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_assignment_unary():
-    source: str = "a = -5"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        Assign(
-            "a",
-            UnaryOperation(
-                "-",
-                Literal(5)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_console_log_literal():
-    source: str = "console_log 5"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ConsoleLog(
-            Literal(5)
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_console_log_variable():
-    source: str = "console_log a"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ConsoleLog(
-            Variable("a")
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_console_log_expression():
-    source: str = "console_log a + 2"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ConsoleLog(
-            BinaryOperation(
-                Variable("a"),
-                "+",
-                Literal(2)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_multiple_statements():
-    source: str = """
-    a = 5
-    b = 10
-    console_log a
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        Assign(
-            "a",
-            Literal(5)
-        ),
-        Assign(
-            "b",
-            Literal(10)
-        ),
-        ConsoleLog(
-            Variable("a")
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_semicolon():
-    source: str = "a = 5; b = 10; console_log a"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        Assign(
-            "a", 
-            Literal(5)
-        ),
-        Assign(
-            "b",
-            Literal(10)
-        ),
-        ConsoleLog(
-            Variable("a")
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_consecutive_separators():
-    source: str = """
-    a = 5;;;
-
-    ;b = 10
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        Assign(
-            "a",
-            Literal(5)
-        ),
-        Assign(
-            "b",
-            Literal(10)
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_invalid_primary():
-    source: str = "*5"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-
-
-def test_invalid_expression():
-    source: str = "5 +"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-
-
-def test_invalid_assignment():
-    source: str = "a ="
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-
-
-def test_invalid_console_log():
-    source: str = "console_log"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-
-
-def test_parens1():
-    source: str = """
-    1 + (2 * 3)
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                Literal(1),
-                "+",
-                BinaryOperation(
-                    Literal(2),
-                    "*",
-                    Literal(3)
-                )
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_parens2():
-    source: str = """
-    (1 + 2) * 3
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                BinaryOperation(
-                    Literal(1),
-                    "+",
-                    Literal(2)
-                ),
-                "*",
-                Literal(3)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_parens3():
-    source: str = """
-    ((1 + 2) * 3)
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                BinaryOperation(
-                    Literal(1),
-                    "+",
-                    Literal(2)
-                ),
-                "*",
-                Literal(3)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_invalid_parens_1():
-    source: str = """
-    (1 + 2
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-
-
-def test_invalid_parens_2():
-    source: str = """
-    1 + 2)
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-
-
-def test_invalid_parens_4():
-    source: str = """
-    ()
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-
-
-from teo.parser.parser import Parser
-from teo.lexer.lexer import Lexer
-from teo.ast.expression import (
-    Expression,
-    Literal,
-    Variable,
-    BinaryOperation,
-    UnaryOperation
-)
-from teo.ast.statement import (
-    Statement,
-    ExpressionStatement,
-    Assign,
-    ConsoleLog
-)
-import pytest
-
-
-def test_empty():
-    source: str = ""
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-    ]
-    
-    assert ast == expected
-
-
-def test_primary_expressions():
-    source: str = """
-    5
-    42
-    a
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            Literal(5)
-            ),
-        ExpressionStatement(
-            Literal(42)
-            ),
-        ExpressionStatement(
-            Variable("a")
-            )
-    ]
-    
-    assert ast == expected
-
-
-def test_unary_operations():
-    source: str = """
-    -5
-    +5
-    --5
-    -+5
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            UnaryOperation(
-                "-", 
-                Literal(5)
-                )
-            ),
-        ExpressionStatement(
-            UnaryOperation(
-                "+", 
-                Literal(5)
-                )
-            ),
-        ExpressionStatement(
-            UnaryOperation("-",
-             UnaryOperation("-", 
-             Literal(5)
-                )
-            )
-        ),
-        ExpressionStatement(
-            UnaryOperation("-",
-             UnaryOperation("+", 
-             Literal(5)
-                )
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_multiplication1():
-    source: str = "2 * 3"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                Literal(2),
-                "*",
-                Literal(3)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_multiplication2():
-    source: str = "2 * 3 * 4"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                BinaryOperation(
-                    Literal(2),
-                    "*",
-                    Literal(3)
-                ),
-                "*",
-                Literal(4)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_division():
-    source: str = "10 / 2"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                Literal(10),
-                "/",
-                Literal(2)
-            )
-        )
-    ]
-    
-    assert ast == expected
-    
-
-def test_addition():
-    source: str = "2 + 3"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                Literal(2),
-                "+",
-                Literal(3)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_subtraction1():
-    source: str = "10 - 4"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                Literal(10),
-                "-",
-                Literal(4)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_subtraction2():
-    source: str = "10 - 3 - 2"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                BinaryOperation(
-                    Literal(10),
-                    "-",
-                    Literal(3)
-                ),
-                "-",
-                Literal(2)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_operator_order():
-    source: str = "2 + 3 * 4"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                Literal(2),
-                "+",
-                BinaryOperation(
-                    Literal(3),
-                    "*",
-                    Literal(4)
-                )
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_operator_order_reverse():
-    source: str = "2 * 3 + 4"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                BinaryOperation(
-                    Literal(2),
-                    "*",
-                    Literal(3)
-                ),
-                "+",
-                Literal(4)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_unary_order():
-    source: str = "-5 * 2"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                UnaryOperation("-", Literal(5)),
-                "*",
-                Literal(2)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_expression_statement():
-    source: str = "a + 2"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                Variable("a"),
-                "+",
-                Literal(2)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_assignment():
-    source: str = "a = 5"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        Assign(
-            "a",
-            Literal(5)
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_assignment_expression():
-    source: str = "a = 2 + 3 * 4"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        Assign(
-            "a",
-            BinaryOperation(
-                Literal(2),
-                "+",
-                BinaryOperation(
-                    Literal(3),
-                    "*",
-                    Literal(4)
-                )
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_assignment_unary():
-    source: str = "a = -5"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        Assign(
-            "a",
-            UnaryOperation(
-                "-",
-                Literal(5)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_console_log_literal():
-    source: str = "console_log 5"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ConsoleLog(
-            Literal(5)
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_console_log_variable():
-    source: str = "console_log a"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ConsoleLog(
-            Variable("a")
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_console_log_expression():
-    source: str = "console_log a + 2"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ConsoleLog(
-            BinaryOperation(
-                Variable("a"),
-                "+",
-                Literal(2)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_multiple_statements():
-    source: str = """
-    a = 5
-    b = 10
-    console_log a
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        Assign(
-            "a",
-            Literal(5)
-        ),
-        Assign(
-            "b",
-            Literal(10)
-        ),
-        ConsoleLog(
-            Variable("a")
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_semicolon():
-    source: str = "a = 5; b = 10; console_log a"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        Assign(
-            "a", 
-            Literal(5)
-        ),
-        Assign(
-            "b",
-            Literal(10)
-        ),
-        ConsoleLog(
-            Variable("a")
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_consecutive_separators():
-    source: str = """
-    a = 5;;;
-
-    ;b = 10
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        Assign(
-            "a",
-            Literal(5)
-        ),
-        Assign(
-            "b",
-            Literal(10)
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_invalid_primary():
-    source: str = "*5"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-
-
-def test_invalid_expression():
-    source: str = "5 +"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-
-
-def test_invalid_assignment():
-    source: str = "a ="
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-
-
-def test_invalid_console_log():
-    source: str = "console_log"
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-
-
-def test_parens1():
-    source: str = """
-    1 + (2 * 3)
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                Literal(1),
-                "+",
-                BinaryOperation(
-                    Literal(2),
-                    "*",
-                    Literal(3)
-                )
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_parens2():
-    source: str = """
-    (1 + 2) * 3
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                BinaryOperation(
-                    Literal(1),
-                    "+",
-                    Literal(2)
-                ),
-                "*",
-                Literal(3)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_parens3():
-    source: str = """
-    ((1 + 2) * 3)
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    expected: list = [
-        ExpressionStatement(
-            BinaryOperation(
-                BinaryOperation(
-                    Literal(1),
-                    "+",
-                    Literal(2)
-                ),
-                "*",
-                Literal(3)
-            )
-        )
-    ]
-    
-    assert ast == expected
-
-
-def test_invalid_parens_1():
-    source: str = """
-    (1 + 2
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-
-
-def test_invalid_parens_2():
-    source: str = """
-    1 + 2)
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-
-
-def test_invalid_parens_5():
-    source: str = """
-    (1 + )
-    """
-    
-    lexer = Lexer(source)
-    tokens = lexer.tokenize()
-    
-    parser = Parser(tokens)
-    
-    with pytest.raises(SyntaxError):
-        parser.parse()
-

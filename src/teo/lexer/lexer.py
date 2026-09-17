@@ -7,9 +7,15 @@ class TokenTypes(Enum):
     NUMBER = auto()         # number
     L_PARENS = auto()       # ()
     R_PARENS = auto()       # )
+    BOOLEAN = auto()       # true / false
     VAR = auto()            # define local variable
     IDENTIFIER = auto()     # variable name
     EQUAL = auto()          # equality ==
+    NOT_EQUAL = auto()      # !=
+    LESS = auto()           # <
+    GREATER = auto()        # >
+    LESS_EQUAL = auto()     # <=
+    GREATER_EQUAL = auto()  # >=
     ASSIGN = auto()         # =
     MULTIPLY = auto()       # *
     DIVIDE = auto()         # /
@@ -23,23 +29,29 @@ class TokenTypes(Enum):
 
 
 TOKEN_RULES = [
-    (TokenTypes.CONSOLE_LOG, r"console_log\b"   ),
-    (TokenTypes.NUMBER,      r"\d+"             ),
-    (TokenTypes.L_PARENS,    r"\("              ),
-    (TokenTypes.R_PARENS,    r"\)"              ),
-    (TokenTypes.VAR,         r"var\b"           ),
-    (TokenTypes.IDENTIFIER,  r"[a-zA-Z]\w*"     ),
-    (TokenTypes.MISMATCH,    r"={3,}"           ),         # don't confuse === or more with == =
-    (TokenTypes.EQUAL,       r"=="              ),
-    (TokenTypes.ASSIGN,      r"="               ),
-    (TokenTypes.MULTIPLY,    r"\*"              ),
-    (TokenTypes.DIVIDE,      r"/"               ),
-    (TokenTypes.PLUS,        r"\+"              ),
-    (TokenTypes.MINUS,       r"-"               ),
-    (TokenTypes.SEMICOLON,   r";"               ),
-    (TokenTypes.NEWLINE,     r"\n"              ),
-    (TokenTypes.SKIP,        r"[ \t]+"          ),
-    (TokenTypes.MISMATCH,    r"."               )              # other mismatches
+    (TokenTypes.CONSOLE_LOG,        r"console_log\b"                ),
+    (TokenTypes.NUMBER,             r"\d+(\.\d+)?"                  ),
+    (TokenTypes.R_PARENS,           r"\)"                           ),
+    (TokenTypes.L_PARENS,           r"\("                           ),
+    (TokenTypes.BOOLEAN,            r"(true\b)|(false\b)"           ),
+    (TokenTypes.VAR,                r"var\b"                        ),
+    (TokenTypes.IDENTIFIER,         r"[a-zA-Z]\w*"                  ),
+    (TokenTypes.MISMATCH,           r"={3,}"                        ),         # don't confuse === or more with == =
+    (TokenTypes.EQUAL,              r"=="                           ),
+    (TokenTypes.NOT_EQUAL,          r"!="                           ),
+    (TokenTypes.LESS_EQUAL,         r"<="                           ),
+    (TokenTypes.GREATER_EQUAL,      r">="                           ),
+    (TokenTypes.LESS,               r"<"                            ),
+    (TokenTypes.GREATER,            r">"                            ),
+    (TokenTypes.ASSIGN,             r"="                            ),
+    (TokenTypes.MULTIPLY,           r"\*"                           ),
+    (TokenTypes.DIVIDE,             r"/"                            ),
+    (TokenTypes.PLUS,               r"\+"                           ),
+    (TokenTypes.MINUS,              r"-"                            ),
+    (TokenTypes.SEMICOLON,          r";"                            ),
+    (TokenTypes.NEWLINE,            r"\n"                           ),
+    (TokenTypes.SKIP,               r"[ \t]+"                       ),
+    (TokenTypes.MISMATCH,           r"."                            )          # other mismatches
 ]
 
 

@@ -39,7 +39,7 @@ def test_console_log() -> None:
 
 
 def test_numbers() -> None:
-    source: str = "123 907 921"
+    source: str = "123 12.3"
     
     lexer: Lexer = Lexer(source)
     tokens: list[Token] = lexer.tokenize()
@@ -47,11 +47,76 @@ def test_numbers() -> None:
 
     expected: list = [
         Token(TokenTypes.NUMBER, "123", 1),
-        Token(TokenTypes.NUMBER, "907", 1),
-        Token(TokenTypes.NUMBER, "921", 1)
+        Token(TokenTypes.NUMBER, "12.3", 1)
     ]
     
     assert tokens == expected
+
+
+def test_invalid_numbers1() -> None:
+    source: str = "."
+    
+    lexer: Lexer = Lexer(source)
+    
+    with pytest.raises(SyntaxError):
+        lexer.tokenize()
+        
+
+def test_invalid_numbers2() -> None:
+    source: str = "5."
+    
+    lexer: Lexer = Lexer(source)
+    
+    with pytest.raises(SyntaxError):
+        lexer.tokenize()
+
+
+def test_invalid_numbers3() -> None:
+    source: str = ".2"
+    
+    lexer: Lexer = Lexer(source)
+        
+    with pytest.raises(SyntaxError):
+        lexer.tokenize()
+        
+
+def test_invalid_numbers4() -> None:
+    source: str = "1.2.3"
+    
+    lexer: Lexer = Lexer(source)
+        
+    with pytest.raises(SyntaxError):
+        lexer.tokenize()
+
+
+def test_bool() -> None:
+    source: str = "true false"
+    
+    lexer: Lexer = Lexer(source)        
+    tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
+    
+    expected = [
+        Token(TokenTypes.BOOLEAN, "true", 1),
+        Token(TokenTypes.BOOLEAN, "false", 1),
+    ]
+    
+    assert tokens == expected
+
+
+def test_invalid_bool() -> None:
+    source: str = "truefalse"
+    
+    lexer: Lexer = Lexer(source)        
+    tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
+    
+    unexpected = [
+        Token(TokenTypes.BOOLEAN, "true", 1),
+        Token(TokenTypes.BOOLEAN, "false", 1),
+    ]
+    
+    assert tokens != unexpected
 
 
 def test_equal_assign() -> None:
@@ -264,6 +329,37 @@ def test_parens() -> None:
         Token(TokenTypes.IDENTIFIER, "b", 1),
         Token(TokenTypes.R_PARENS, ")", 1),
         Token(TokenTypes.IDENTIFIER, "s", 1)
+    ]
+    
+    assert tokens == expected
+    
+
+def test_comparations() -> None:
+    source: str = "a == b a > b a < b a >= b a <= b a != b"
+    
+    lexer: Lexer = Lexer(source)
+    tokens: list[Token] = lexer.tokenize()
+    tokens.pop(-1)
+    
+    expected: list = [
+        Token(TokenTypes.IDENTIFIER, "a", 1),
+        Token(TokenTypes.EQUAL, "==", 1),
+        Token(TokenTypes.IDENTIFIER, "b", 1),
+        Token(TokenTypes.IDENTIFIER, "a", 1),
+        Token(TokenTypes.GREATER, ">", 1),
+        Token(TokenTypes.IDENTIFIER, "b", 1),
+        Token(TokenTypes.IDENTIFIER, "a", 1),
+        Token(TokenTypes.LESS, "<", 1),
+        Token(TokenTypes.IDENTIFIER, "b", 1),
+        Token(TokenTypes.IDENTIFIER, "a", 1),
+        Token(TokenTypes.GREATER_EQUAL, ">=", 1),
+        Token(TokenTypes.IDENTIFIER, "b", 1),
+        Token(TokenTypes.IDENTIFIER, "a", 1),
+        Token(TokenTypes.LESS_EQUAL, "<=", 1),
+        Token(TokenTypes.IDENTIFIER, "b", 1),
+        Token(TokenTypes.IDENTIFIER, "a", 1),
+        Token(TokenTypes.NOT_EQUAL, "!=", 1),
+        Token(TokenTypes.IDENTIFIER, "b", 1)
     ]
     
     assert tokens == expected

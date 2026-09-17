@@ -97,6 +97,10 @@ class Parser:
         result = self.parse_addition()
 
         return result
+    
+    
+    def parse_comparison(self) -> Expression:
+        ...
 
     
     def parse_addition(self) -> Expression:
@@ -158,7 +162,10 @@ class Parser:
         
         match token.type:
             case TokenTypes.NUMBER:
-                result = Literal(int(token.value))
+                result = Literal(float(token.value) if "." in token.value else int(token.value))
+                
+            case TokenTypes.BOOLEAN:
+                result = Literal(True if token.value == "true" else False)
                 
             case TokenTypes.IDENTIFIER:
                 result = Variable(token.value)

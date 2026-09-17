@@ -21,7 +21,7 @@ class Expression:
 
 # literal
 class Literal(Expression):
-    def __init__(self, value):
+    def __init__(self, value: object):
         self.value = value
     
     def __repr__(self) -> str:
