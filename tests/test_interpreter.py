@@ -42,7 +42,7 @@ def test_binary_operation():
         (BinaryOperation(Literal(5), "+", Literal(10)), 15),
         (BinaryOperation(Literal(10), "-", Literal(5)), 5),
         (BinaryOperation(Literal(5), "*", Literal(10)), 50),
-        (BinaryOperation(Literal(10), "/", Literal(2)), 5),
+        (BinaryOperation(Literal(10), "/", Literal(2)), 5)
     ]
 
     for expression, expected in expressions:
@@ -54,7 +54,7 @@ def test_unary_operation():
 
     expressions = [
         (UnaryOperation("-", Literal(5)), -5),
-        (UnaryOperation("+", Literal(5)), 5),
+        (UnaryOperation("+", Literal(5)), 5)
     ]
 
     for expression, expected in expressions:
@@ -65,7 +65,11 @@ def test_expression_statement():
     interpreter = Interpreter()
 
     statement = ExpressionStatement(
-        BinaryOperation(Literal(5), "+", Literal(10))
+        BinaryOperation(
+            Literal(5), 
+            "+", 
+            Literal(10)
+        )
     )
 
     result = interpreter.execute(statement)
@@ -122,7 +126,7 @@ def test_assignment_expression():
     expression = BinaryOperation(
         Variable("a"),
         "+",
-        Literal(10),
+        Literal(10)
     )
 
     assert interpreter.evaluate(expression) == 15
@@ -165,7 +169,111 @@ def test_binary_operation_with_variables():
     expression = BinaryOperation(
         Variable("a"),
         "+",
-        Variable("b"),
+        Variable("b")
     )
 
     assert interpreter.evaluate(expression) == 15
+
+
+def test_comparations1():
+    interpreter = Interpreter()
+
+    expression = BinaryOperation(
+        Literal(2),
+        "<",
+        Literal(3)
+    )
+
+    assert interpreter.evaluate(expression) == True
+
+
+def test_comparations2():
+    interpreter = Interpreter()
+
+    expression = BinaryOperation(
+        Literal("2"),
+        ">",
+        Literal("3")
+    )
+
+    assert interpreter.evaluate(expression) == False
+
+
+def test_comparations3():
+    interpreter = Interpreter()
+
+    expression = BinaryOperation(
+        Literal(2),
+        "==",
+        Literal(2)
+    )
+
+    assert interpreter.evaluate(expression) == True
+
+
+def test_comparations4():
+    interpreter = Interpreter()
+
+    expression = BinaryOperation(
+        Literal(2),
+        "!=",
+        Literal(3)
+    )
+
+    assert interpreter.evaluate(expression) == True
+
+
+def test_comparations5():
+    interpreter = Interpreter()
+
+    expression = BinaryOperation(
+        Literal(2),
+        "<=",
+        Literal(2)
+    )
+
+    assert interpreter.evaluate(expression) == True
+
+
+def test_comparations6():
+    interpreter = Interpreter()
+
+    expression = BinaryOperation(
+        Literal(2),
+        ">=",
+        Literal(3)
+    )
+
+    assert interpreter.evaluate(expression) == False
+
+
+def test_comparations7():
+    interpreter = Interpreter()
+
+    expression = BinaryOperation(
+        BinaryOperation(
+            Literal(2),
+            "+",
+            Literal(3)
+        ),
+        "<",
+        Literal(10)
+    )
+
+    assert interpreter.evaluate(expression) == True
+
+
+def test_comparations8():
+    interpreter = Interpreter()
+
+    expression = BinaryOperation(
+        BinaryOperation(
+            Literal(2),
+            "*",
+            Literal(3)
+        ),
+        ">=",
+        Literal(6)
+    )
+
+    assert interpreter.evaluate(expression) == True

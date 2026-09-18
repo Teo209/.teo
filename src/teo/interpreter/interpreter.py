@@ -49,6 +49,20 @@ class Interpreter(ExpressionVisitor, StatementVisitor):
                 result = left * right
             case "/":
                 result = left / right
+                
+            case "==":
+                result = left == right
+            case "!=":
+                result = left != right
+            case "<":
+                result = left < right
+            case "<=":
+                result = left <= right
+            case ">":
+                result = left > right
+            case ">=":
+                result = left >= right
+                
             case _:
                 raise SyntaxError(f"Invalid binary operator '{operator}'")
         
