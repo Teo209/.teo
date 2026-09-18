@@ -877,3 +877,139 @@ def test_float_division():
     ]
 
     assert ast == expected
+
+
+def test_comparison():
+    source: str = """
+    2 < 3
+    2 > 3
+    2 == 2
+    2 != 3
+    2 <= 3
+    2 >= 3
+    """
+
+    lexer = Lexer(source)
+    tokens = lexer.tokenize()
+
+    parser = Parser(tokens)
+    ast = parser.parse()
+
+    expected: list = [
+        ExpressionStatement(
+            BinaryOperation(
+                Literal(2),
+                "<",
+                Literal(3)
+            )
+        ),
+        ExpressionStatement(
+            BinaryOperation(
+                Literal(2),
+                ">",
+                Literal(3)
+            )
+        ),
+        ExpressionStatement(
+            BinaryOperation(
+                Literal(2),
+                "==",
+                Literal(2)
+            )
+        ),
+        ExpressionStatement(
+            BinaryOperation(
+                Literal(2),
+                "!=",
+                Literal(3)
+            )
+        ),
+        ExpressionStatement(
+            BinaryOperation(
+                Literal(2),
+                "<=",
+                Literal(3)
+            )
+        ),
+        ExpressionStatement(
+            BinaryOperation(
+                Literal(2),
+                ">=",
+                Literal(3)
+            )
+        )
+    ]
+
+    assert ast == expected
+
+
+def test_comparison_order():
+    source: str = """
+    2 + 3 < 10
+    1 < 2 < 3
+    """
+
+    lexer = Lexer(source)
+    tokens = lexer.tokenize()
+
+    print(tokens)
+
+    parser = Parser(tokens)
+    ast = parser.parse()
+
+    expected: list = [
+        ExpressionStatement(
+            BinaryOperation(
+                BinaryOperation(
+                    Literal(2),
+                    "+",
+                    Literal(3)
+                ),
+                "<",
+                Literal(10)
+            )
+        ),
+        ExpressionStatement(
+            BinaryOperation(
+                BinaryOperation(
+                    Literal(1),
+                    "<",
+                    Literal(2)
+                ),
+                "<",
+                Literal(3)
+            )
+        )
+    ]
+
+    assert ast == expected
+    
+    
+def test_comparison_parantheses():
+    source: str = """
+    (2 * 3) >= 6
+    """
+
+    lexer = Lexer(source)
+    tokens = lexer.tokenize()
+
+    print(tokens)
+
+    parser = Parser(tokens)
+    ast = parser.parse()
+
+    expected: list = [
+        ExpressionStatement(
+            BinaryOperation(
+                BinaryOperation(
+                    Literal(2),
+                    "*",
+                    Literal(3)
+                ),
+                ">=",
+                Literal(6)
+            )
+        )
+    ]
+
+    assert ast == expected

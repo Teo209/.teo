@@ -94,13 +94,24 @@ class Parser:
     def parse_expression(self) -> Expression:
         # a + 1
         
-        result = self.parse_addition()
+        result = self.parse_comparison()
 
         return result
     
     
     def parse_comparison(self) -> Expression:
-        ...
+        # < <= == !=>= >
+        
+        left = self.parse_addition()
+        
+        while self.peek().type in [TokenTypes.EQUAL, TokenTypes.NOT_EQUAL, TokenTypes.LESS, 
+                TokenTypes.LESS_EQUAL, TokenTypes.GREATER, TokenTypes.GREATER_EQUAL]:
+            
+            operator = self.consume()
+            right = self.parse_addition()
+            left = BinaryOperation(left, operator.value, right)
+
+        return left
 
     
     def parse_addition(self) -> Expression:
@@ -142,9 +153,11 @@ class Parser:
             case TokenTypes.MINUS:
                 self.consume()
                 result = UnaryOperation("-", self.parse_unary())
+                
             case TokenTypes.PLUS:
                 self.consume()
                 result = UnaryOperation("+", self.parse_unary())
+                
             case _: 
                 result = self.parse_primary()
         

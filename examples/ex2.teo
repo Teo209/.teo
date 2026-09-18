@@ -14,3 +14,6 @@ console_log c
 
 c = (a + b) * 2
 console_log c
+
+d = true
+console_log d
