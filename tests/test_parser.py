@@ -952,8 +952,6 @@ def test_comparison_order():
     lexer = Lexer(source)
     tokens = lexer.tokenize()
 
-    print(tokens)
-
     parser = Parser(tokens)
     ast = parser.parse()
 
@@ -992,8 +990,6 @@ def test_comparison_parantheses():
 
     lexer = Lexer(source)
     tokens = lexer.tokenize()
-
-    print(tokens)
 
     parser = Parser(tokens)
     ast = parser.parse()

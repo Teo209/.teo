@@ -1,3 +1,4 @@
+from ..sourcespan.sourcespan import SourceSpan, SourcePosition
 from enum import Enum, auto
 import re
 
@@ -56,14 +57,14 @@ TOKEN_RULES = [
 
 
 class Token():
-    def __init__(self, type: TokenTypes, value: str, line: int) -> None:
+    def __init__(self, type: TokenTypes, value: str, span: SourceSpan = None):
         self.type = type
         self.value = value
-        self.line = line
+        self.span = span
         
     
     def __repr__(self) -> str:
-        return f"Token (type: {self.type.name}; value: {repr(self.value)}; line: {self.line})\n"
+        return f"Token (type: {self.type.name}; value: {repr(self.value)}; span: [{self.span})]\n"
 
 
     def __eq__(self, other) -> bool:
@@ -71,9 +72,8 @@ class Token():
             return NotImplemented
 
         return (
-            self.type == other.type
-            and self.value == other.value
-            and self.line == other.line
+            self.type == other.type and
+            self.value == other.value
         )
 
 
@@ -84,14 +84,17 @@ class Lexer():
 
     def tokenize(self) -> list[Token]:
         # "(?P<nume>regex)"
+        
         token_regex = "|".join(f"(?P<TOKEN_{i}>{rule[1]})" for i, rule in enumerate(TOKEN_RULES))
         
         #print(self.token_regex)
         
         token_list = []
         curent_line = 1
+        current_column = 0
         
         for match in re.finditer(token_regex, self.source):
+            
             group_name = match.lastgroup
             group_value = match.group(group_name)
         
@@ -100,15 +103,39 @@ class Lexer():
             rule_index = int(group_name.removeprefix("TOKEN_"))
             token_type = TOKEN_RULES[rule_index][0]
             
-            if token_type == TokenTypes.SKIP: 
+            if token_type == TokenTypes.SKIP:
+                current_column += len(group_value)
                 continue
-            if token_type == TokenTypes.MISMATCH:
-                raise SyntaxError(f"\nInvalid character \'{group_value}\' at line {curent_line}\n")
+            
+            
             else:
-                new_token = Token(token_type, group_value, curent_line)
+                span = SourceSpan(
+                    SourcePosition(curent_line, current_column), 
+                    SourcePosition(curent_line, current_column + len(group_value))
+                )
+                
+                current_column += len(group_value)
+                
+                if token_type == TokenTypes.MISMATCH:
+                    raise SyntaxError(f"\nInvalid character \'{group_value}\' at {span.start}\n")
+                
+                if token_type == TokenTypes.NEWLINE: 
+                    curent_line += 1
+                    current_column = 0
+                
+                new_token = Token(token_type, group_value, span)
                 token_list.append(new_token)
-                if token_type == TokenTypes.NEWLINE: curent_line += 1
-        
-        token_list.append(Token(TokenTypes.EOF, value="", line=curent_line+1))
+                
+
+        token_list.append(
+            Token(
+                TokenTypes.EOF, 
+                "",
+                SourceSpan(
+                    SourcePosition(curent_line, current_column),
+                    SourcePosition(curent_line, current_column)
+                    )
+                )
+            )
             
         return token_list

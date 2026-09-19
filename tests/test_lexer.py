@@ -20,7 +20,7 @@ def test_eof() -> None:
     lexer = Lexer(source)
     tokens = lexer.tokenize()
 
-    assert tokens[-1] == Token(TokenTypes.EOF, "", 2)
+    assert tokens[-1] == Token(TokenTypes.EOF, "")
 
 
 def test_console_log() -> None:
@@ -31,8 +31,8 @@ def test_console_log() -> None:
     tokens.pop(-1)
 
     expected: list = [
-        Token(TokenTypes.CONSOLE_LOG, "console_log", 1),
-        Token(TokenTypes.NUMBER, "123", 1)
+        Token(TokenTypes.CONSOLE_LOG, "console_log"),
+        Token(TokenTypes.NUMBER, "123")
     ]
     
     assert tokens == expected
@@ -46,8 +46,8 @@ def test_numbers() -> None:
     tokens.pop(-1)
 
     expected: list = [
-        Token(TokenTypes.NUMBER, "123", 1),
-        Token(TokenTypes.NUMBER, "12.3", 1)
+        Token(TokenTypes.NUMBER, "123"),
+        Token(TokenTypes.NUMBER, "12.3")
     ]
     
     assert tokens == expected
@@ -97,8 +97,8 @@ def test_bool() -> None:
     tokens.pop(-1)
     
     expected = [
-        Token(TokenTypes.BOOLEAN, "true", 1),
-        Token(TokenTypes.BOOLEAN, "false", 1),
+        Token(TokenTypes.BOOLEAN, "true"),
+        Token(TokenTypes.BOOLEAN, "false"),
     ]
     
     assert tokens == expected
@@ -112,8 +112,8 @@ def test_invalid_bool() -> None:
     tokens.pop(-1)
     
     unexpected = [
-        Token(TokenTypes.BOOLEAN, "true", 1),
-        Token(TokenTypes.BOOLEAN, "false", 1),
+        Token(TokenTypes.BOOLEAN, "true"),
+        Token(TokenTypes.BOOLEAN, "false"),
     ]
     
     assert tokens != unexpected
@@ -127,8 +127,8 @@ def test_equal_assign() -> None:
     tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.ASSIGN, "=", 1),
-        Token(TokenTypes.EQUAL, "==", 1)
+        Token(TokenTypes.ASSIGN, "="),
+        Token(TokenTypes.EQUAL, "==")
     ]
     
     assert tokens == expected
@@ -142,9 +142,9 @@ def test_identifier() -> None:
     tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.IDENTIFIER, "abc", 1),
-        Token(TokenTypes.IDENTIFIER, "test123", 1),
-        Token(TokenTypes.IDENTIFIER, "var2a_", 1)
+        Token(TokenTypes.IDENTIFIER, "abc"),
+        Token(TokenTypes.IDENTIFIER, "test123"),
+        Token(TokenTypes.IDENTIFIER, "var2a_")
     ]
     
     assert tokens == expected
@@ -158,9 +158,9 @@ def test_multiply() -> None:
     tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.MULTIPLY, "*", 1),
-        Token(TokenTypes.MULTIPLY, "*", 1),
-        Token(TokenTypes.MULTIPLY, "*", 1)
+        Token(TokenTypes.MULTIPLY, "*"),
+        Token(TokenTypes.MULTIPLY, "*"),
+        Token(TokenTypes.MULTIPLY, "*")
     ]
     
     assert tokens == expected
@@ -174,9 +174,9 @@ def test_divide() -> None:
     tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.DIVIDE, "/", 1),
-        Token(TokenTypes.DIVIDE, "/", 1),
-        Token(TokenTypes.DIVIDE, "/", 1)
+        Token(TokenTypes.DIVIDE, "/"),
+        Token(TokenTypes.DIVIDE, "/"),
+        Token(TokenTypes.DIVIDE, "/")
     ]
     
     assert tokens == expected
@@ -190,9 +190,9 @@ def test_plus() -> None:
     tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.PLUS, "+", 1),
-        Token(TokenTypes.PLUS, "+", 1),
-        Token(TokenTypes.PLUS, "+", 1)
+        Token(TokenTypes.PLUS, "+"),
+        Token(TokenTypes.PLUS, "+"),
+        Token(TokenTypes.PLUS, "+")
     ]
     
     assert tokens == expected
@@ -206,9 +206,9 @@ def test_minus() -> None:
     tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.MINUS, "-", 1),
-        Token(TokenTypes.MINUS, "-", 1),
-        Token(TokenTypes.MINUS, "-", 1)
+        Token(TokenTypes.MINUS, "-"),
+        Token(TokenTypes.MINUS, "-"),
+        Token(TokenTypes.MINUS, "-")
     ]
     
     assert tokens == expected
@@ -222,9 +222,9 @@ def test_semicolon() -> None:
     tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.SEMICOLON, ";", 1),
-        Token(TokenTypes.SEMICOLON, ";", 1),
-        Token(TokenTypes.SEMICOLON, ";", 1)
+        Token(TokenTypes.SEMICOLON, ";"),
+        Token(TokenTypes.SEMICOLON, ";"),
+        Token(TokenTypes.SEMICOLON, ";")
     ]
     
     assert tokens == expected
@@ -240,9 +240,9 @@ def test_newline() -> None:
     tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.NEWLINE, "\n", 1),
-        Token(TokenTypes.NEWLINE, "\n", 2),
-        Token(TokenTypes.NEWLINE, "\n", 3)
+        Token(TokenTypes.NEWLINE, "\n"),
+        Token(TokenTypes.NEWLINE, "\n"),
+        Token(TokenTypes.NEWLINE, "\n")
     ]
     
     assert tokens == expected
@@ -296,7 +296,7 @@ def test_invalid_console_log1() -> None:
     tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.IDENTIFIER, "console_log123", 1)
+        Token(TokenTypes.IDENTIFIER, "console_log123")
     ]
     
     assert tokens == expected
@@ -310,7 +310,7 @@ def test_invalid_console_log2() -> None:
     tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.IDENTIFIER, "abconsole_log", 1)
+        Token(TokenTypes.IDENTIFIER, "abconsole_log")
     ]
     
     assert tokens == expected
@@ -324,11 +324,11 @@ def test_parens() -> None:
     tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.IDENTIFIER, "a", 1),
-        Token(TokenTypes.L_PARENS, "(", 1),
-        Token(TokenTypes.IDENTIFIER, "b", 1),
-        Token(TokenTypes.R_PARENS, ")", 1),
-        Token(TokenTypes.IDENTIFIER, "s", 1)
+        Token(TokenTypes.IDENTIFIER, "a"),
+        Token(TokenTypes.L_PARENS, "("),
+        Token(TokenTypes.IDENTIFIER, "b"),
+        Token(TokenTypes.R_PARENS, ")"),
+        Token(TokenTypes.IDENTIFIER, "s")
     ]
     
     assert tokens == expected
@@ -342,24 +342,24 @@ def test_comparations() -> None:
     tokens.pop(-1)
     
     expected: list = [
-        Token(TokenTypes.IDENTIFIER, "a", 1),
-        Token(TokenTypes.EQUAL, "==", 1),
-        Token(TokenTypes.IDENTIFIER, "b", 1),
-        Token(TokenTypes.IDENTIFIER, "a", 1),
-        Token(TokenTypes.GREATER, ">", 1),
-        Token(TokenTypes.IDENTIFIER, "b", 1),
-        Token(TokenTypes.IDENTIFIER, "a", 1),
-        Token(TokenTypes.LESS, "<", 1),
-        Token(TokenTypes.IDENTIFIER, "b", 1),
-        Token(TokenTypes.IDENTIFIER, "a", 1),
-        Token(TokenTypes.GREATER_EQUAL, ">=", 1),
-        Token(TokenTypes.IDENTIFIER, "b", 1),
-        Token(TokenTypes.IDENTIFIER, "a", 1),
-        Token(TokenTypes.LESS_EQUAL, "<=", 1),
-        Token(TokenTypes.IDENTIFIER, "b", 1),
-        Token(TokenTypes.IDENTIFIER, "a", 1),
-        Token(TokenTypes.NOT_EQUAL, "!=", 1),
-        Token(TokenTypes.IDENTIFIER, "b", 1)
+        Token(TokenTypes.IDENTIFIER, "a"),
+        Token(TokenTypes.EQUAL, "=="),
+        Token(TokenTypes.IDENTIFIER, "b"),
+        Token(TokenTypes.IDENTIFIER, "a"),
+        Token(TokenTypes.GREATER, ">"),
+        Token(TokenTypes.IDENTIFIER, "b"),
+        Token(TokenTypes.IDENTIFIER, "a"),
+        Token(TokenTypes.LESS, "<"),
+        Token(TokenTypes.IDENTIFIER, "b"),
+        Token(TokenTypes.IDENTIFIER, "a"),
+        Token(TokenTypes.GREATER_EQUAL, ">="),
+        Token(TokenTypes.IDENTIFIER, "b"),
+        Token(TokenTypes.IDENTIFIER, "a"),
+        Token(TokenTypes.LESS_EQUAL, "<="),
+        Token(TokenTypes.IDENTIFIER, "b"),
+        Token(TokenTypes.IDENTIFIER, "a"),
+        Token(TokenTypes.NOT_EQUAL, "!="),
+        Token(TokenTypes.IDENTIFIER, "b")
     ]
     
     assert tokens == expected
