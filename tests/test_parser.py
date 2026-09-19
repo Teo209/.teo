@@ -13,6 +13,7 @@ from teo.ast.statement import (
     Assign,
     ConsoleLog
 )
+from teo.errors.parser import TeoParserError
 import pytest
 
 
@@ -558,7 +559,7 @@ def test_invalid_primary():
     
     parser = Parser(tokens)
     
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoParserError):
         parser.parse()
 
 
@@ -570,7 +571,7 @@ def test_invalid_expression():
     
     parser = Parser(tokens)
     
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoParserError):
         parser.parse()
 
 
@@ -582,7 +583,7 @@ def test_invalid_assignment():
     
     parser = Parser(tokens)
     
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoParserError):
         parser.parse()
 
 
@@ -594,7 +595,7 @@ def test_invalid_console_log():
     
     parser = Parser(tokens)
     
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoParserError):
         parser.parse()
 
 
@@ -692,7 +693,7 @@ def test_invalid_parens_1():
     
     parser = Parser(tokens)
     
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoParserError):
         parser.parse()
 
 
@@ -706,7 +707,7 @@ def test_invalid_parens_2():
     
     parser = Parser(tokens)
     
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoParserError):
         parser.parse()
 
 
@@ -720,7 +721,7 @@ def test_invalid_parens_3():
     
     parser = Parser(tokens)
     
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoParserError):
         parser.parse()
 
 

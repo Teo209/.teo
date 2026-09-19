@@ -1,4 +1,5 @@
-from ..sourcespan.sourcespan import SourceSpan, SourcePosition
+from teo.sourcespan.sourcespan import SourceSpan, SourcePosition
+from teo.errors.lexer import TeoLexerError
 from enum import Enum, auto
 import re
 
@@ -117,7 +118,7 @@ class Lexer():
                 current_column += len(group_value)
                 
                 if token_type == TokenTypes.MISMATCH:
-                    raise SyntaxError(f"\nInvalid character \'{group_value}\' at {span.start}\n")
+                    raise TeoLexerError(f"\nInvalid character \'{group_value}\'", span)
                 
                 if token_type == TokenTypes.NEWLINE: 
                     curent_line += 1

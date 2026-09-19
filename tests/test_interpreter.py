@@ -10,6 +10,7 @@ from teo.ast.statement import (
     ConsoleLog,
 )
 from teo.interpreter.interpreter import Interpreter
+from teo.errors.runtime import TeoRuntimeError
 import pytest
 
 
@@ -110,7 +111,7 @@ def test_local_assignment_existing_variable():
         Assign("a", Literal(5), is_local=True)
     )
 
-    with pytest.raises(NameError):
+    with pytest.raises(TeoRuntimeError):
         interpreter.execute(
             Assign("a", Literal(10), is_local=True)
         )

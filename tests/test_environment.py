@@ -1,4 +1,6 @@
 from teo.interpreter.environment import Environment
+from teo.errors.runtime import TeoRuntimeError
+
 import pytest
 
 
@@ -151,7 +153,7 @@ def test_get_existing_local():
 def test_get_inexistent_local():
     global_env = Environment()
     
-    with pytest.raises(NameError):
+    with pytest.raises(TeoRuntimeError):
         global_env.get("a")
 
 
@@ -170,7 +172,7 @@ def test_get_inexistent_global():
     global_env = Environment()
     function_env = Environment(global_env)
     
-    with pytest.raises(NameError):
+    with pytest.raises(TeoRuntimeError):
         function_env.get("a")
 
 

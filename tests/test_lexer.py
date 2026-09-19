@@ -1,4 +1,5 @@
 from teo.lexer.lexer import Lexer, Token, TokenTypes
+from teo.errors.lexer import TeoLexerError
 import pytest
 
 
@@ -58,7 +59,7 @@ def test_invalid_numbers1() -> None:
     
     lexer: Lexer = Lexer(source)
     
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoLexerError):
         lexer.tokenize()
         
 
@@ -67,7 +68,7 @@ def test_invalid_numbers2() -> None:
     
     lexer: Lexer = Lexer(source)
     
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoLexerError):
         lexer.tokenize()
 
 
@@ -76,7 +77,7 @@ def test_invalid_numbers3() -> None:
     
     lexer: Lexer = Lexer(source)
         
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoLexerError):
         lexer.tokenize()
         
 
@@ -85,7 +86,7 @@ def test_invalid_numbers4() -> None:
     
     lexer: Lexer = Lexer(source)
         
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoLexerError):
         lexer.tokenize()
 
 
@@ -266,7 +267,7 @@ def test_missmatch1() -> None:
     
     lexer: Lexer = Lexer(source)
 
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoLexerError):
         lexer.tokenize()
 
 
@@ -275,7 +276,7 @@ def test_invalid_equal_assign1() -> None:
     
     lexer: Lexer = Lexer(source)
 
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoLexerError):
         lexer.tokenize()
 
 
@@ -284,7 +285,7 @@ def test_invalid_equal_assign2() -> None:
     
     lexer: Lexer = Lexer(source)
 
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoLexerError):
         lexer.tokenize()
 
 

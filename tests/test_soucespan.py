@@ -1,5 +1,6 @@
-from teo.lexer.lexer import Lexer, TokenTypes
+from teo.lexer.lexer import Lexer
 from teo.sourcespan.sourcespan import SourceSpan, SourcePosition
+from teo.errors.lexer import TeoLexerError
 import pytest
 
 
@@ -76,7 +77,7 @@ def test_mismatch():
     
     lexer = Lexer(source)
     
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoLexerError):
         tokens = lexer.tokenize()
 
 

@@ -1,4 +1,5 @@
 from teo.main import run
+from teo.errors.parser import TeoParserError
 import pytest
 
 
@@ -53,7 +54,7 @@ def test_3():
     a = 
     """
     
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoParserError):
         run(source)
 
 
@@ -62,5 +63,5 @@ def test_4():
     a = 4 b = 1
     """
     
-    with pytest.raises(SyntaxError):
+    with pytest.raises(TeoParserError):
         run(source)

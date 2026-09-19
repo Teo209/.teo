@@ -1,3 +1,6 @@
+from teo.errors.runtime import TeoRuntimeError
+
+
 class Environment:
     def __init__(self, enclosing: "Environment | None" = None):
         # Global space
@@ -40,7 +43,7 @@ class Environment:
         environment = self.find(name)
         
         if not environment:
-            raise NameError(f"Variable {name} not found")
+            raise TeoRuntimeError(f"Variable {name} not found")
         
         return environment.values[name]
     

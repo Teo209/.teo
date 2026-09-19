@@ -1,5 +1,6 @@
-from ..ast.expression import ExpressionVisitor, Expression, Literal, Variable, BinaryOperation, UnaryOperation
-from ..ast.statement import StatementVisitor, Statement, ExpressionStatement, Assign, ConsoleLog
+from teo.ast.expression import ExpressionVisitor, Expression, Literal, Variable, BinaryOperation, UnaryOperation
+from teo.ast.statement import StatementVisitor, Statement, ExpressionStatement, Assign, ConsoleLog
+from teo.errors.runtime import TeoRuntimeError
 from .environment import Environment
 
 
@@ -64,7 +65,7 @@ class Interpreter(ExpressionVisitor, StatementVisitor):
                 result = left >= right
                 
             case _:
-                raise SyntaxError(f"Invalid binary operator '{operator}'")
+                raise TeoRuntimeError(f"Invalid binary operator '{operator}'")
         
         return result
     
@@ -79,7 +80,7 @@ class Interpreter(ExpressionVisitor, StatementVisitor):
             case "+":
                 result = right
             case _:
-                raise SyntaxError(f"Invalid unary operator '{operator}'")
+                raise TeoRuntimeError(f"Invalid unary operator '{operator}'")
         
         return result
 
@@ -94,7 +95,7 @@ class Interpreter(ExpressionVisitor, StatementVisitor):
             not_defined = self.global_env.define(assign.name, self.evaluate(assign.value))
             
             if not not_defined:
-                raise NameError(f"Local variable '{assign.name}' already defined")
+                raise TeoRuntimeError(f"Local variable '{assign.name}' already defined")
             
             return 0
             

@@ -1,4 +1,6 @@
 from teo.lexer.lexer import Token, TokenTypes
+from teo.errors.parser import TeoParserError
+
 from teo.ast.expression import (
     Expression,
     Literal,
@@ -40,7 +42,7 @@ class Parser:
             
             next_token = self.peek()
             if not next_token.type in [TokenTypes.NEWLINE, TokenTypes.SEMICOLON, TokenTypes.EOF]:
-                raise SyntaxError (f"Missing \';\' after statement at {next_token.span}")
+                raise TeoParserError (f"Missing \';\'", next_token.span)
 
     
     def parse_statement(self) -> Statement:
@@ -54,13 +56,13 @@ class Parser:
                 next = self.peek()                                      # identifier
                 
                 if next.type != TokenTypes.IDENTIFIER:
-                    raise SyntaxError(f"Expected identifier after 'var' at {next.span}")
+                    raise TeoParserError(f"Expected identifier after 'var'", next.span)
                 
                 token = self.consume()                                  # identifier
                 next = self.peek()                                      # assign
                 
                 if next.type != TokenTypes.ASSIGN:
-                    raise SyntaxError(f"Expected '=' after var {token} at {next.span}")
+                    raise TeoParserError(f"Expected '=' after var {token}", next.span)
                 
                 self.consume()                                          # assign
                     
@@ -168,7 +170,7 @@ class Parser:
         # Number, Identifier
         
         if self.peek().type == TokenTypes.EOF:
-            raise SyntaxError(f"End of file, expected token at {self.peek().span}")
+            raise TeoParserError(f"End of file, expected token", self.peek().span)
         
         
         token = self.consume()
@@ -188,11 +190,11 @@ class Parser:
                 
                 token = self.consume()
                 if token.type != TokenTypes.R_PARENS:
-                    raise SyntaxError(f"Expected \')\' at {token.span}")
+                    raise TeoParserError(f"Expected \')\'", token.span)
             
             case _:
                 result = None
-                raise SyntaxError(f"Invalid token {token} at {token.span}")
+                raise TeoParserError(f"Invalid token {token}", token.span)
             
         return result
         
